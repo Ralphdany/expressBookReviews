@@ -72,7 +72,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   const { username } = req.session.authorization
 
   if (!isbn || !review) {
-    return res.status(404).json({message: "Provide isbn and make sure you're signed in"})
+    return res.status(400).json({message: "Provide isbn and make sure you're signed in"})
   }
 
 
@@ -80,6 +80,19 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 
   return res.status(200).json(books);
 });
+
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+    const { isbn } = req.params
+    const { username } = req.session.authorization
+
+    if (!isbn) {
+        return res.status(400).json({message: "isbn not provided"})
+    }
+
+    delete books[isbn].reviews[username]
+
+    return res.status(200).json(books)
+})
 
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
