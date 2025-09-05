@@ -67,7 +67,18 @@ if (authenticatedUser(username, password)) {
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const { isbn } = req.params
+  const { review } = req.body
+  const { username } = req.session.authorization
+
+  if (!isbn || !review) {
+    return res.status(404).json({message: "Provide isbn and make sure you're signed in"})
+  }
+
+
+  books[isbn].reviews[username] = review
+
+  return res.status(200).json(books);
 });
 
 module.exports.authenticated = regd_users;
